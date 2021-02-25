@@ -16,12 +16,29 @@
                      <span class="headline">{{ formTitle }}</span>
                   </v-card-title>
                   <v-card-text>
-                      <v-text-field v-model="username" label="User"></v-text-field>
-                      <v-text-field v-model="correo" label="coreo" type="email"></v-text-field>
-                      <v-text-field v-model="password" label="Password"></v-text-field>
-                      <v-text-field v-model="first_name" label="First Name"></v-text-field>
-                      <v-text-field v-model="last_name" label="Last Name"></v-text-field>
+                      <v-text-field v-model="user.username" label="Usuario"></v-text-field>
+                      <v-text-field v-model="user.correo" label="Correo" type="email"></v-text-field>
+                      <v-text-field v-model="user.password" label="Clave"></v-text-field>
+                      <v-text-field v-model="user.first_name" label="Nombres"></v-text-field>
+                      <v-text-field v-model="user.last_name" label="Apellidos"></v-text-field>
                   </v-card-text>
+                  <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog = false"
+          >
+            Cerrar
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="save(user)"
+          >
+            Guardar
+          </v-btn>
+        </v-card-actions>
                 </v-card>
               </v-dialog>
             </v-toolbar>
@@ -46,7 +63,14 @@
             { text: 'Apellido', value: 'apellido' },
         ],
         dialog: false,
-        formTitle: ''
+        formTitle: 'Registrar usuario',
+        user: {
+          username: '',
+          correo: '',
+          password: '',
+          first_name: '',
+          last_name: ''
+        }
     }),
 
   head () {
@@ -57,6 +81,7 @@
 methods : {
     save: async function (user){
       try {
+            console.log('Usuario>>>', user)
             let send= await  $http.$post('/api/users', user)
             console.log(send);
       } catch (error){
