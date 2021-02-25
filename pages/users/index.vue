@@ -1,25 +1,34 @@
 <template>
-  <section class="container">
-    <div>
-      <Logo />
-      <h1 class="title">
-        USERS
-      </h1>
-      <ul class="users">
-        <li v-for="(user, index) in users" :key="index" class="user">
 
-          <v-btn nuxt :to="{ name: 'users-id', params: { id: index }}">{{ user.name }}</v-btn>
+    <v-data-table :headers="headers" :items="users" >
+          <template v-slot:top>
+            <v-toolbar flat>
+              <v-toolbar-title>Usuarios</v-toolbar-title>
+                <v-divider class="mx-4" vertical></v-divider>
 
-        <nuxt-link :to="{ name: 'users-id', params: { id: index }}">
-        {{ user.name }}
-      </nuxt-link>
-    </li>
-  </ul>
-  <nuxt-link class="button" to="/">
-    Homepage
-  </nuxt-link>
-</div>
-</section>
+                <v-spacer></v-spacer>
+              <v-dialog v-model="dialog" max-width="500px">
+                <template v-slot:activator="{on, attrs}">
+                  <v-btn color="primary" dark  v-bind="attrs" v-on="on">New Item</v-btn>
+                </template>
+                <v-card>
+                  <v-card-title>
+                     <span class="headline">{{ formTitle }}</span>
+                  </v-card-title>
+                  <v-card-text>
+                      <v-text-field v-model="username" label="User"></v-text-field>
+                      <v-text-field v-model="correo" label="coreo" type="email"></v-text-field>
+                      <v-text-field v-model="password" label="Password"></v-text-field>
+                      <v-text-field v-model="first_name" label="First Name"></v-text-field>
+                      <v-text-field v-model="last_name" label="Last Name"></v-text-field>
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
+            </v-toolbar>
+          </template>
+    </v-data-table>
+
+
 </template>
 
 <script>
@@ -32,13 +41,32 @@
 },
     data: () => ({
         efrain:'',
+        headers: [
+            { text: 'Name', value: 'name',  },
+            { text: 'Apellido', value: 'apellido' },
+        ],
+        dialog: false,
+        formTitle: ''
     }),
 
   head () {
   return {
   title: 'Users'
 }
+},
+methods : {
+    save: async function (user){
+      try {
+            let send= await  $http.$post('/api/users', user)
+            console.log(send);
+      } catch (error){
+          console.log(error)
+      }
+
+  }
 }
+
+
 }
 </script>
 
